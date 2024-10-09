@@ -1,0 +1,431 @@
+package com.manuelrurda.ejercicio1cm.screens
+
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerState
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
+import androidx.core.content.ContextCompat.getString
+import com.manuelrurda.ejercicio1cm.R
+import com.manuelrurda.ejercicio1cm.ui.theme.PoppinsFontFamily
+import com.manuelrurda.ejercicio1cm.ui.theme.RichBlack
+import com.manuelrurda.ejercicio1cm.ui.theme.Saffrom
+import com.manuelrurda.ejercicio1cm.ui.theme.buttonTextStyle
+import com.manuelrurda.ejercicio1cm.ui.theme.labelTextStyle
+import com.manuelrurda.ejercicio1cm.ui.theme.logoTextStyle
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+
+@Composable
+fun FlightDetailsScreen() {
+    Image(
+        painter = painterResource(id = R.drawable.image_flight_bg),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(400.dp)
+    )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.Transparent,
+                        Saffrom
+                    ),
+                    startY = 200f,
+                    endY = 1200f
+                )
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        FlightDetailsCard()
+    }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 60.dp),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Text(text = "Logo", style = logoTextStyle, color = RichBlack)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FlightDetailsCard() {
+
+    val context = LocalContext.current
+    val selectHint = stringResource(id = R.string.hint_select_option)
+    val destinations = listOf(
+        stringResource(id = R.string.menu_item_gdl),
+        stringResource(id = R.string.menu_item_mty),
+        stringResource(id = R.string.menu_item_tij),
+        stringResource(id = R.string.menu_item_cabos),
+        stringResource(id = R.string.menu_item_mxcity),
+        stringResource(id = R.string.menu_item_cancun)
+    )
+
+    val originText = remember { mutableStateOf(selectHint) }
+    val destinationText = remember { mutableStateOf(selectHint) }
+    val departureDateState = rememberDatePickerState()
+    val returnDateState = rememberDatePickerState()
+
+    ElevatedCard(
+        modifier = Modifier.padding(all = 8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+    ) {
+        Row(modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp)) {
+            Column(
+                modifier = Modifier
+                    .weight(1F)
+                    .padding(end = 5.dp)
+            ) {
+                Text(
+                    modifier = Modifier.padding(bottom = 7.dp),
+                    text = stringResource(id = R.string.label_origin),
+                    style = labelTextStyle
+                )
+                DestinationsDropDown(
+                    destinations = destinations,
+                    text = originText,
+                    validate = {
+                        validateDestinationText(
+                            context,
+                            originText,
+                            destinationText
+                        )
+                    }
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .weight(1F)
+                    .padding(start = 5.dp)
+            ) {
+                Text(
+                    modifier = Modifier.padding(bottom = 7.dp),
+                    text = stringResource(id = R.string.label_destination),
+                    style = labelTextStyle
+                )
+                DestinationsDropDown(destinations = destinations,
+                    text = destinationText,
+                    validate = {
+                        validateDestinationText(
+                            context,
+                            destinationText,
+                            originText
+                        )
+                    })
+            }
+        }
+        Column(modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp)) {
+            Text(
+                text = stringResource(id = R.string.label_departure),
+                style = labelTextStyle
+            )
+            DestinationDatePicker(
+                datePickerState = departureDateState,
+                validator = { date ->
+                    validateDepartureDate(date, returnDateState)
+                })
+            Spacer(modifier = Modifier.height(15.dp))
+            Text(
+                text = stringResource(id = R.string.label_return),
+                style = labelTextStyle
+            )
+            DestinationDatePicker(
+                datePickerState = returnDateState,
+                validator = { date ->
+                    validateReturnDate(date, departureDateState)
+                })
+            Spacer(modifier = Modifier.height(15.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    colors = ButtonDefaults.buttonColors(containerColor = RichBlack),
+                    enabled = (
+                            originText.value != selectHint &&
+                                    destinationText.value != selectHint &&
+                                    departureDateState.selectedDateMillis != null &&
+                                    returnDateState.selectedDateMillis != null
+                            ),
+                    onClick = {
+                        onNextClick(
+                            originText,
+                            destinationText,
+                            departureDateState,
+                            returnDateState
+                        )
+                    }) {
+                    Text(
+                        text = stringResource(id = R.string.button_next),
+                        style = buttonTextStyle
+                    )
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+fun onNextClick(
+    originText: MutableState<String>,
+    destinationText: MutableState<String>,
+    departureDateState: DatePickerState,
+    returnDateState: DatePickerState
+) {
+
+
+    Log.d("TEST", originText.value)
+    Log.d("TEST", destinationText.value)
+    Log.d("TEST", departureDateState.selectedDateMillis.toString())
+    Log.d("TEST", returnDateState.selectedDateMillis.toString())
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DestinationsDropDown(
+    destinations: List<String>,
+    text: MutableState<String>,
+    validate: () -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = {
+        expanded = !expanded
+    }) {
+        TextField(
+            modifier = Modifier
+                .menuAnchor(),
+            value = text.value,
+            onValueChange = {},
+            readOnly = true,
+            singleLine = false,
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+            textStyle = TextStyle(
+                fontFamily = PoppinsFontFamily,
+                fontSize = 12.sp
+            )
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }) {
+            destinations.forEach { destination ->
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = destination,
+                            fontFamily = PoppinsFontFamily,
+                            fontSize = 12.sp
+                        )
+                    },
+                    onClick = {
+                        text.value = destination
+                        validate()
+                        expanded = false
+                    },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DestinationDatePicker(datePickerState: DatePickerState, validator: (Long) -> Boolean) {
+    var expanded by remember { mutableStateOf(false) }
+    val selectedDate =
+        datePickerState.selectedDateMillis?.let {
+            convertMillisToDate(it)
+        } ?: ""
+
+    Box {
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp),
+            value = selectedDate,
+            onValueChange = {},
+            label = {
+                Text(
+                    text = stringResource(id = R.string.hint_select_date),
+                    fontFamily = PoppinsFontFamily,
+                    fontSize = 13.sp
+                )
+            },
+            readOnly = true,
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Default.DateRange,
+                    contentDescription = "Select date"
+                )
+            }
+        )
+
+        Box(modifier = Modifier
+            .matchParentSize()
+            .clickable { expanded = !expanded })
+    }
+
+    if (expanded) {
+        Popup(
+            onDismissRequest = { expanded = false },
+            alignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .shadow(elevation = 4.dp)
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(16.dp)
+            ) {
+                Column {
+                    DatePicker(
+                        state = datePickerState,
+                        showModeToggle = false,
+                        dateValidator = { date -> validator(date) }
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Button(onClick = {
+                            expanded = false
+                        }) {
+                            Text(
+                                text = stringResource(id = R.string.button_select),
+                                style = buttonTextStyle
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+fun convertMillisToDate(millis: Long): String {
+    val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+    return formatter.format(Date(millis))
+}
+
+fun validateDestinationText(
+    context: Context,
+    updatedTextState: MutableState<String>,
+    comparedTextState: MutableState<String>
+) {
+    if (updatedTextState.value == comparedTextState.value) {
+        Toast.makeText(
+            context,
+            getString(context, R.string.error_same_destination),
+            Toast.LENGTH_LONG
+        ).show()
+        updatedTextState.value = getString(context, R.string.hint_select_option)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+fun validateDepartureDate(
+    date: Long,
+    returnDateState: DatePickerState
+): Boolean {
+    val currentDate = Calendar.getInstance().apply {
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }
+
+    if (returnDateState.selectedDateMillis != null) {
+        return date < returnDateState.selectedDateMillis!! &&
+                date >= currentDate.time.time
+    }
+
+    return date >= currentDate.time.time
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+fun validateReturnDate(
+    date: Long,
+    departureDateState: DatePickerState
+): Boolean {
+    val currentDate = Calendar.getInstance().apply {
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }
+
+    if (departureDateState.selectedDateMillis != null) {
+        return date > departureDateState.selectedDateMillis!!
+    }
+
+    return date >= currentDate.time.time
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun Preview() {
+    FlightDetailsScreen()
+//    FlightDetailsCard()
+//    val departureDateState = rememberDatePickerState()
+//    DestinationDatePicker(departureDateState)
+//    DestinationsDropDown(destinations = destinations)
+}
