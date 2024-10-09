@@ -3,14 +3,17 @@
 
     <string name="label_origin">Origin</string>
     <string name="label_destination">Destination</string>
-    <string name="label_departure">Departure Date</string>
-    <string name="label_return">Return Date</string>
+    <string name="label_departure_date">Departure Date</string>
+    <string name="label_return_date">Return Date</string>
+    <string name="label_departure_time">Departure Time</string>
+    <string name="label_return_time">Return Time</string>
 
     <string name="hint_select_option">Select an option</string>
     <string name="hint_select_date">Select date</string>
 
     <string name="button_next">Next</string>
     <string name="button_select">Select</string>
+
     <!--Destinations-->
     <string name="menu_item_cancun">Cancun</string>
     <string name="menu_item_mxcity">Mexico City</string>
@@ -18,6 +21,12 @@
     <string name="menu_item_mty">Monterrey</string>
     <string name="menu_item_cabos">Los Cabos</string>
     <string name="menu_item_tij">Tijuana</string>
+
+    <!--Flight Times-->
+    <string name="menu_item_700">7:00</string>
+    <string name="menu_item_1000">10:00</string>
+    <string name="menu_item_1400">14:00</string>
+    <string name="menu_item_1800">18:00</string>
 
     <string name="error_same_destination">Destination and origin cannot be the same location.</string>
     <string name="error_past_date">The date cannot be in the past.</string>

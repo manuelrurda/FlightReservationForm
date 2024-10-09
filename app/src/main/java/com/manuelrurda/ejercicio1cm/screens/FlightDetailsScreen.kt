@@ -117,9 +117,17 @@ fun FlightDetailsCard() {
         stringResource(id = R.string.menu_item_mxcity),
         stringResource(id = R.string.menu_item_cancun)
     )
+    val flightTimes = listOf(
+        stringResource(id = R.string.menu_item_700),
+        stringResource(id = R.string.menu_item_1000),
+        stringResource(id = R.string.menu_item_1400),
+        stringResource(id = R.string.menu_item_1800)
+    )
 
-    val originText = remember { mutableStateOf(selectHint) }
-    val destinationText = remember { mutableStateOf(selectHint) }
+    val originTextState = remember { mutableStateOf(selectHint) }
+    val destinationTextState = remember { mutableStateOf(selectHint) }
+    val departureTimeState = remember { mutableStateOf(selectHint) }
+    val returnTimeState = remember { mutableStateOf(selectHint) }
     val departureDateState = rememberDatePickerState()
     val returnDateState = rememberDatePickerState()
 
@@ -138,14 +146,14 @@ fun FlightDetailsCard() {
                     text = stringResource(id = R.string.label_origin),
                     style = labelTextStyle
                 )
-                DestinationsDropDown(
-                    destinations = destinations,
-                    text = originText,
-                    validate = {
+                DropDownMenu(
+                    menuItems = destinations,
+                    textState = originTextState,
+                    validator = {
                         validateDestinationText(
                             context,
-                            originText,
-                            destinationText
+                            originTextState,
+                            destinationTextState
                         )
                     }
                 )
@@ -160,63 +168,114 @@ fun FlightDetailsCard() {
                     text = stringResource(id = R.string.label_destination),
                     style = labelTextStyle
                 )
-                DestinationsDropDown(destinations = destinations,
-                    text = destinationText,
-                    validate = {
+                DropDownMenu(menuItems = destinations,
+                    textState = destinationTextState,
+                    validator = {
                         validateDestinationText(
                             context,
-                            destinationText,
-                            originText
+                            destinationTextState,
+                            originTextState
                         )
                     })
             }
         }
-        Column(modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp)) {
-            Text(
-                text = stringResource(id = R.string.label_departure),
-                style = labelTextStyle
-            )
-            DestinationDatePicker(
-                datePickerState = departureDateState,
-                validator = { date ->
-                    validateDepartureDate(date, returnDateState)
-                })
-            Spacer(modifier = Modifier.height(15.dp))
-            Text(
-                text = stringResource(id = R.string.label_return),
-                style = labelTextStyle
-            )
-            DestinationDatePicker(
-                datePickerState = returnDateState,
-                validator = { date ->
-                    validateReturnDate(date, departureDateState)
-                })
-            Spacer(modifier = Modifier.height(15.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+        Row(modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp)) {
+            Column(
+                modifier = Modifier
+                    .weight(1F)
+                    .padding(end = 5.dp)
             ) {
-                Button(
-                    colors = ButtonDefaults.buttonColors(containerColor = RichBlack),
-                    enabled = (
-                            originText.value != selectHint &&
-                                    destinationText.value != selectHint &&
-                                    departureDateState.selectedDateMillis != null &&
-                                    returnDateState.selectedDateMillis != null
-                            ),
-                    onClick = {
-                        onNextClick(
-                            originText,
-                            destinationText,
-                            departureDateState,
-                            returnDateState
-                        )
-                    }) {
-                    Text(
-                        text = stringResource(id = R.string.button_next),
-                        style = buttonTextStyle
+                Text(
+                    text = stringResource(id = R.string.label_departure_date),
+                    style = labelTextStyle
+                )
+                DestinationDatePicker(
+                    datePickerState = departureDateState,
+                    validator = { date ->
+                        validateDepartureDate(date, returnDateState)
+                    })
+            }
+            Column(
+                modifier = Modifier
+                    .weight(1F)
+                    .padding(start = 5.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.label_departure_time),
+                    style = labelTextStyle
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                DropDownMenu(
+                    menuItems = flightTimes,
+                    textState = departureTimeState,
+                    validator = {})
+            }
+        }
+        Row(modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp)) {
+            Column(
+                modifier = Modifier
+                    .weight(1F)
+                    .padding(end = 5.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.label_return_date),
+                    style = labelTextStyle
+                )
+                DestinationDatePicker(
+                    datePickerState = returnDateState,
+                    validator = { date ->
+                        validateReturnDate(date, departureDateState)
+                    })
+            }
+            Column(
+                modifier = Modifier
+                    .weight(1F)
+                    .padding(start = 5.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.label_return_time),
+                    style = labelTextStyle
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                DropDownMenu(
+                    menuItems = flightTimes,
+                    textState = returnTimeState,
+                    validator = {
+                    })
+            }
+        }
+
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 15.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Button(
+                colors = ButtonDefaults.buttonColors(containerColor = RichBlack),
+                enabled = (
+                        originTextState.value != selectHint &&
+                                destinationTextState.value != selectHint &&
+                                departureTimeState.value != selectHint &&
+                                returnTimeState.value != selectHint &&
+                                departureDateState.selectedDateMillis != null &&
+                                returnDateState.selectedDateMillis != null
+                        ),
+                onClick = {
+                    onNextClick(
+                        originTextState,
+                        destinationTextState,
+                        departureTimeState,
+                        returnTimeState,
+                        departureDateState,
+                        returnDateState
                     )
-                }
+                }) {
+                Text(
+                    text = stringResource(id = R.string.button_next),
+                    style = buttonTextStyle
+                )
             }
         }
     }
@@ -224,25 +283,27 @@ fun FlightDetailsCard() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun onNextClick(
-    originText: MutableState<String>,
-    destinationText: MutableState<String>,
+    originTextState: MutableState<String>,
+    destinationTextState: MutableState<String>,
+    departureTimeState: MutableState<String>,
+    returnTimeState: MutableState<String>,
     departureDateState: DatePickerState,
     returnDateState: DatePickerState
 ) {
-
-
-    Log.d("TEST", originText.value)
-    Log.d("TEST", destinationText.value)
+    Log.d("TEST", originTextState.value)
+    Log.d("TEST", destinationTextState.value)
+    Log.d("TEST", departureTimeState.value)
+    Log.d("TEST", returnTimeState.value)
     Log.d("TEST", departureDateState.selectedDateMillis.toString())
     Log.d("TEST", returnDateState.selectedDateMillis.toString())
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DestinationsDropDown(
-    destinations: List<String>,
-    text: MutableState<String>,
-    validate: () -> Unit
+fun DropDownMenu(
+    menuItems: List<String>,
+    textState: MutableState<String>,
+    validator: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -252,7 +313,7 @@ fun DestinationsDropDown(
         TextField(
             modifier = Modifier
                 .menuAnchor(),
-            value = text.value,
+            value = textState.value,
             onValueChange = {},
             readOnly = true,
             singleLine = false,
@@ -266,7 +327,7 @@ fun DestinationsDropDown(
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }) {
-            destinations.forEach { destination ->
+            menuItems.forEach { destination ->
                 DropdownMenuItem(
                     text = {
                         Text(
@@ -276,8 +337,8 @@ fun DestinationsDropDown(
                         )
                     },
                     onClick = {
-                        text.value = destination
-                        validate()
+                        textState.value = destination
+                        validator()
                         expanded = false
                     },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
@@ -347,7 +408,10 @@ fun DestinationDatePicker(datePickerState: DatePickerState, validator: (Long) ->
                     ) {
                         Button(onClick = {
                             expanded = false
-                        }) {
+                        },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = RichBlack
+                            )) {
                             Text(
                                 text = stringResource(id = R.string.button_select),
                                 style = buttonTextStyle
