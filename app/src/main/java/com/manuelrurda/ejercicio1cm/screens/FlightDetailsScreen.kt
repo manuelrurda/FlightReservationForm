@@ -1,7 +1,6 @@
 package com.manuelrurda.ejercicio1cm.screens
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -38,6 +37,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,7 +67,16 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun FlightDetailsScreen() {
+fun FlightDetailsScreen(
+    onNextClick: (
+        originText: String,
+        destinationText: String,
+        departureTime: String,
+        returnTime: String,
+        departureDate: Long?,
+        returnDate: Long?
+    ) -> Unit
+) {
     Image(
         painter = painterResource(id = R.drawable.image_flight_bg),
         contentDescription = null,
@@ -91,7 +100,7 @@ fun FlightDetailsScreen() {
             ),
         contentAlignment = Alignment.Center
     ) {
-        FlightDetailsCard()
+        FlightDetailsCard(onNextClick)
     }
     Box(
         modifier = Modifier
@@ -105,7 +114,16 @@ fun FlightDetailsScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FlightDetailsCard() {
+fun FlightDetailsCard(
+    onNextClick: (
+        originText: String,
+        destinationText: String,
+        departureTime: String,
+        returnTime: String,
+        departureDate: Long?,
+        returnDate: Long?
+    ) -> Unit
+) {
 
     val context = LocalContext.current
     val selectHint = stringResource(id = R.string.hint_select_option)
@@ -124,10 +142,10 @@ fun FlightDetailsCard() {
         stringResource(id = R.string.menu_item_1800)
     )
 
-    val originTextState = remember { mutableStateOf(selectHint) }
-    val destinationTextState = remember { mutableStateOf(selectHint) }
-    val departureTimeState = remember { mutableStateOf(selectHint) }
-    val returnTimeState = remember { mutableStateOf(selectHint) }
+    val originTextState = rememberSaveable { mutableStateOf(selectHint) }
+    val destinationTextState = rememberSaveable { mutableStateOf(selectHint) }
+    val departureTimeState = rememberSaveable { mutableStateOf(selectHint) }
+    val returnTimeState = rememberSaveable { mutableStateOf(selectHint) }
     val departureDateState = rememberDatePickerState()
     val returnDateState = rememberDatePickerState()
 
@@ -264,12 +282,12 @@ fun FlightDetailsCard() {
                         ),
                 onClick = {
                     onNextClick(
-                        originTextState,
-                        destinationTextState,
-                        departureTimeState,
-                        returnTimeState,
-                        departureDateState,
-                        returnDateState
+                        originTextState.value,
+                        destinationTextState.value,
+                        departureTimeState.value,
+                        returnTimeState.value,
+                        departureDateState.selectedDateMillis,
+                        returnDateState.selectedDateMillis
                     )
                 }) {
                 Text(
@@ -279,23 +297,6 @@ fun FlightDetailsCard() {
             }
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-fun onNextClick(
-    originTextState: MutableState<String>,
-    destinationTextState: MutableState<String>,
-    departureTimeState: MutableState<String>,
-    returnTimeState: MutableState<String>,
-    departureDateState: DatePickerState,
-    returnDateState: DatePickerState
-) {
-    Log.d("TEST", originTextState.value)
-    Log.d("TEST", destinationTextState.value)
-    Log.d("TEST", departureTimeState.value)
-    Log.d("TEST", returnTimeState.value)
-    Log.d("TEST", departureDateState.selectedDateMillis.toString())
-    Log.d("TEST", returnDateState.selectedDateMillis.toString())
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -406,12 +407,14 @@ fun DestinationDatePicker(datePickerState: DatePickerState, validator: (Long) ->
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Button(onClick = {
-                            expanded = false
-                        },
+                        Button(
+                            onClick = {
+                                expanded = false
+                            },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = RichBlack
-                            )) {
+                            )
+                        ) {
                             Text(
                                 text = stringResource(id = R.string.button_select),
                                 style = buttonTextStyle
@@ -487,7 +490,6 @@ fun validateReturnDate(
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
-    FlightDetailsScreen()
 //    FlightDetailsCard()
 //    val departureDateState = rememberDatePickerState()
 //    DestinationDatePicker(departureDateState)

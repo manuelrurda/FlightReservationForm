@@ -8,8 +8,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.savedstate.SavedStateRegistryController
+import androidx.navigation.toRoute
 import com.manuelrurda.ejercicio1cm.screens.FlightDetailsScreen
+import com.manuelrurda.ejercicio1cm.screens.PassengerDetailsScreen
 import com.manuelrurda.ejercicio1cm.ui.theme.Ejercicio1CMTheme
 import kotlinx.serialization.Serializable
 
@@ -25,9 +26,41 @@ class MainActivity : ComponentActivity() {
                 navController = rememberNavController()
                 NavHost(
                     navController = navController,
-                    startDestination = FlightDetailsScreen
+                    startDestination = FlightDetails
                 ) {
-                    composable<FlightDetailsScreen> { FlightDetailsScreen() }
+                    composable<FlightDetails> {
+                        FlightDetailsScreen(
+                            onNextClick = { originText: String,
+                                            destinationText: String,
+                                            departureTime: String,
+                                            returnTime: String,
+                                            departureDate: Long?,
+                                            returnDate: Long?
+                                ->
+                                navController.navigate(
+                                    PassengerDetails(
+                                        originText,
+                                        destinationText,
+                                        departureTime,
+                                        returnTime,
+                                        departureDate,
+                                        returnDate
+                                    )
+                                )
+                            }
+                        )
+                    }
+                    composable<PassengerDetails> {
+                        val args = it.toRoute<PassengerDetails>()
+                        PassengerDetailsScreen(
+                            originText = args.originText,
+                            destinationText = args.destinationText,
+                            departureTime = args.departureTime,
+                            returnTime = args.returnTime,
+                            departureDate = args.departureDate,
+                            returnDate = args.returnDate
+                        )
+                    }
                 }
             }
         }
@@ -35,4 +68,14 @@ class MainActivity : ComponentActivity() {
 }
 
 @Serializable
-object FlightDetailsScreen
+object FlightDetails
+
+@Serializable
+data class PassengerDetails(
+    val originText: String,
+    val destinationText: String,
+    val departureTime: String,
+    val returnTime: String,
+    val departureDate: Long?,
+    val returnDate: Long?
+)
