@@ -55,12 +55,14 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.core.content.ContextCompat.getString
 import com.manuelrurda.ejercicio1cm.R
+import com.manuelrurda.ejercicio1cm.convertMillisToDate
 import com.manuelrurda.ejercicio1cm.ui.theme.PoppinsFontFamily
 import com.manuelrurda.ejercicio1cm.ui.theme.RichBlack
 import com.manuelrurda.ejercicio1cm.ui.theme.Saffrom
 import com.manuelrurda.ejercicio1cm.ui.theme.buttonTextStyle
 import com.manuelrurda.ejercicio1cm.ui.theme.labelTextStyle
 import com.manuelrurda.ejercicio1cm.ui.theme.logoTextStyle
+import com.manuelrurda.ejercicio1cm.ui.theme.textFieldTextStyle
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -142,10 +144,10 @@ fun FlightDetailsCard(
         stringResource(id = R.string.menu_item_1800)
     )
 
-    val originTextState = rememberSaveable { mutableStateOf(selectHint) }
-    val destinationTextState = rememberSaveable { mutableStateOf(selectHint) }
-    val departureTimeState = rememberSaveable { mutableStateOf(selectHint) }
-    val returnTimeState = rememberSaveable { mutableStateOf(selectHint) }
+    val originTextState = rememberSaveable { mutableStateOf("") }
+    val destinationTextState = rememberSaveable { mutableStateOf("") }
+    val departureTimeState = rememberSaveable { mutableStateOf("") }
+    val returnTimeState = rememberSaveable { mutableStateOf("") }
     val departureDateState = rememberDatePickerState()
     val returnDateState = rememberDatePickerState()
 
@@ -166,6 +168,7 @@ fun FlightDetailsCard(
                 )
                 DropDownMenu(
                     menuItems = destinations,
+                    placeholderText = stringResource(id = R.string.hint_select_option),
                     textState = originTextState,
                     validator = {
                         validateDestinationText(
@@ -186,8 +189,10 @@ fun FlightDetailsCard(
                     text = stringResource(id = R.string.label_destination),
                     style = labelTextStyle
                 )
-                DropDownMenu(menuItems = destinations,
+                DropDownMenu(
+                    menuItems = destinations,
                     textState = destinationTextState,
+                    placeholderText = stringResource(id = R.string.hint_select_option),
                     validator = {
                         validateDestinationText(
                             context,
@@ -207,6 +212,7 @@ fun FlightDetailsCard(
                     text = stringResource(id = R.string.label_departure_date),
                     style = labelTextStyle
                 )
+                Spacer(modifier = Modifier.height(5.dp))
                 DestinationDatePicker(
                     datePickerState = departureDateState,
                     validator = { date ->
@@ -225,6 +231,7 @@ fun FlightDetailsCard(
                 Spacer(modifier = Modifier.height(5.dp))
                 DropDownMenu(
                     menuItems = flightTimes,
+                    placeholderText = stringResource(R.string.hint_select_option),
                     textState = departureTimeState,
                     validator = {})
             }
@@ -239,6 +246,7 @@ fun FlightDetailsCard(
                     text = stringResource(id = R.string.label_return_date),
                     style = labelTextStyle
                 )
+                Spacer(modifier = Modifier.height(5.dp))
                 DestinationDatePicker(
                     datePickerState = returnDateState,
                     validator = { date ->
@@ -257,6 +265,7 @@ fun FlightDetailsCard(
                 Spacer(modifier = Modifier.height(5.dp))
                 DropDownMenu(
                     menuItems = flightTimes,
+                    placeholderText = stringResource(id = R.string.hint_select_option),
                     textState = returnTimeState,
                     validator = {
                     })
@@ -303,6 +312,7 @@ fun FlightDetailsCard(
 @Composable
 fun DropDownMenu(
     menuItems: List<String>,
+    placeholderText: String,
     textState: MutableState<String>,
     validator: () -> Unit
 ) {
@@ -315,15 +325,18 @@ fun DropDownMenu(
             modifier = Modifier
                 .menuAnchor(),
             value = textState.value,
+            placeholder = {
+                Text(
+                    text = placeholderText,
+                    style = textFieldTextStyle
+                )
+            },
             onValueChange = {},
             readOnly = true,
             singleLine = false,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            textStyle = TextStyle(
-                fontFamily = PoppinsFontFamily,
-                fontSize = 12.sp
-            )
+            textStyle = textFieldTextStyle
         )
         ExposedDropdownMenu(
             expanded = expanded,
@@ -362,14 +375,13 @@ fun DestinationDatePicker(datePickerState: DatePickerState, validator: (Long) ->
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(60.dp),
+                .height(55.dp),
             value = selectedDate,
             onValueChange = {},
-            label = {
+            placeholder = {
                 Text(
                     text = stringResource(id = R.string.hint_select_date),
-                    fontFamily = PoppinsFontFamily,
-                    fontSize = 13.sp
+                    style = textFieldTextStyle
                 )
             },
             readOnly = true,
@@ -426,11 +438,6 @@ fun DestinationDatePicker(datePickerState: DatePickerState, validator: (Long) ->
         }
     }
 
-}
-
-fun convertMillisToDate(millis: Long): String {
-    val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-    return formatter.format(Date(millis))
 }
 
 fun validateDestinationText(
@@ -490,7 +497,15 @@ fun validateReturnDate(
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
-//    FlightDetailsCard()
+    FlightDetailsCard(onNextClick = { originText: String,
+                                      destinationText: String,
+                                      departureTime: String,
+                                      returnTime: String,
+                                      departureDate: Long?,
+                                      returnDate: Long?
+        ->
+
+    })
 //    val departureDateState = rememberDatePickerState()
 //    DestinationDatePicker(departureDateState)
 //    DestinationsDropDown(destinations = destinations)

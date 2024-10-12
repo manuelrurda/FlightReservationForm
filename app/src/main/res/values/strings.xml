@@ -1,15 +1,22 @@
 <resources>
     <string name="app_name">Ejercicio1CM</string>
 
+    <string name="title_flight_details">Flight Details</string>
+
     <string name="label_origin">Origin</string>
+    <string name="label_return">Return</string>
     <string name="label_destination">Destination</string>
     <string name="label_departure_date">Departure Date</string>
     <string name="label_return_date">Return Date</string>
     <string name="label_departure_time">Departure Time</string>
     <string name="label_return_time">Return Time</string>
+    <string name="label_name">Name</string>
+    <string name="label_last_name">Last Name</string>
+    <string name="label_email">Email</string>
+    <string name="label_frequent_flyer">Frequent Flyer Number</string>
 
-    <string name="hint_select_option">Select an option</string>
-    <string name="hint_select_date">Select date</string>
+    <string name="hint_select_option">Select</string>
+    <string name="hint_select_date">MM/dd/yyyy</string>
 
     <string name="button_next">Next</string>
     <string name="button_select">Select</string>
