@@ -282,12 +282,12 @@ fun FlightDetailsCard(
             Button(
                 colors = ButtonDefaults.buttonColors(containerColor = RichBlack),
                 enabled = (
-                        originTextState.value != selectHint &&
-                                destinationTextState.value != selectHint &&
-                                departureTimeState.value != selectHint &&
-                                returnTimeState.value != selectHint &&
-                                departureDateState.selectedDateMillis != null &&
-                                returnDateState.selectedDateMillis != null
+                            originTextState.value.isNotEmpty() &&
+                            destinationTextState.value.isNotEmpty() &&
+                            departureTimeState.value.isNotEmpty() &&
+                            returnTimeState.value.isNotEmpty() &&
+                            departureDateState.selectedDateMillis != null &&
+                            returnDateState.selectedDateMillis != null
                         ),
                 onClick = {
                     onNextClick(
