@@ -2,6 +2,7 @@
     <string name="app_name">Ejercicio1CM</string>
 
     <string name="title_flight_details">Flight Details</string>
+    <string name="title_passenger_details">Passenger Details</string>
 
     <string name="label_origin">Origin</string>
     <string name="label_return">Return</string>
@@ -17,6 +18,10 @@
 
     <string name="hint_select_option">Select</string>
     <string name="hint_select_date">MM/dd/yyyy</string>
+    <string name="hint_john">John</string>
+    <string name="hint_doe">Doe</string>
+    <string name="hint_example_email">example@email.com</string>
+    <string name="hint_frq_flyer">01XXXXXX</string>
 
     <string name="button_next">Next</string>
     <string name="button_select">Select</string>

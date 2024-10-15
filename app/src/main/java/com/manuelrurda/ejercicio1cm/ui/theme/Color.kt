@@ -8,3 +8,5 @@ val PurpleGrey40 = Color(0xFF625b71)
 
 val Saffrom = Color(0xFFEBC934)
 val RichBlack = Color(0xFF0D1321)
+val HintBlack = Color(0x0A0D1321)
+val lightGray = Color(0xFF8F9194)
