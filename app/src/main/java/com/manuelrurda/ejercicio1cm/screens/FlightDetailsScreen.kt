@@ -2,7 +2,6 @@ package com.manuelrurda.ejercicio1cm.screens
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -42,66 +42,31 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.core.content.ContextCompat.getString
 import com.manuelrurda.ejercicio1cm.R
+import com.manuelrurda.ejercicio1cm.components.Background
+import com.manuelrurda.ejercicio1cm.components.TextButton
 import com.manuelrurda.ejercicio1cm.convertMillisToDate
+import com.manuelrurda.ejercicio1cm.ui.theme.HintBlack
 import com.manuelrurda.ejercicio1cm.ui.theme.PoppinsFontFamily
 import com.manuelrurda.ejercicio1cm.ui.theme.RichBlack
-import com.manuelrurda.ejercicio1cm.ui.theme.Saffrom
 import com.manuelrurda.ejercicio1cm.ui.theme.buttonTextStyle
 import com.manuelrurda.ejercicio1cm.ui.theme.labelTextStyle
 import com.manuelrurda.ejercicio1cm.ui.theme.logoTextStyle
 import com.manuelrurda.ejercicio1cm.ui.theme.textFieldTextStyle
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
-import java.util.Locale
 
 @Composable
 fun FlightDetailsScreen(
-    onNextClick: (
-        originText: String,
-        destinationText: String,
-        departureTime: String,
-        returnTime: String,
-        departureDate: Long?,
-        returnDate: Long?
-    ) -> Unit
+    onNextClick: (String, String, String, String, String, String, Long?, Long?) -> Unit
 ) {
-    Image(
-        painter = painterResource(id = R.drawable.image_flight_bg),
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(400.dp)
-    )
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color.Transparent,
-                        Saffrom
-                    ),
-                    startY = 200f,
-                    endY = 1200f
-                )
-            ),
-        contentAlignment = Alignment.Center
-    ) {
+    Background {
         FlightDetailsCard(onNextClick)
     }
     Box(
@@ -117,18 +82,10 @@ fun FlightDetailsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FlightDetailsCard(
-    onNextClick: (
-        originText: String,
-        destinationText: String,
-        departureTime: String,
-        returnTime: String,
-        departureDate: Long?,
-        returnDate: Long?
-    ) -> Unit
+    onNextClick: (String, String, String, String, String, String, Long?, Long?) -> Unit
 ) {
 
     val context = LocalContext.current
-    val selectHint = stringResource(id = R.string.hint_select_option)
     val destinations = listOf(
         stringResource(id = R.string.menu_item_gdl),
         stringResource(id = R.string.menu_item_mty),
@@ -148,6 +105,8 @@ fun FlightDetailsCard(
     val destinationTextState = rememberSaveable { mutableStateOf("") }
     val departureTimeState = rememberSaveable { mutableStateOf("") }
     val returnTimeState = rememberSaveable { mutableStateOf("") }
+    val departureSeatState = rememberSaveable { mutableStateOf("") }
+    val returnSeatState = rememberSaveable { mutableStateOf("") }
     val departureDateState = rememberDatePickerState()
     val returnDateState = rememberDatePickerState()
 
@@ -279,31 +238,27 @@ fun FlightDetailsCard(
                 .padding(vertical = 15.dp),
             contentAlignment = Alignment.Center
         ) {
-            Button(
-                colors = ButtonDefaults.buttonColors(containerColor = RichBlack),
-                enabled = (
-                            originTextState.value.isNotEmpty() &&
-                            destinationTextState.value.isNotEmpty() &&
-                            departureTimeState.value.isNotEmpty() &&
-                            returnTimeState.value.isNotEmpty() &&
-                            departureDateState.selectedDateMillis != null &&
-                            returnDateState.selectedDateMillis != null
-                        ),
+            TextButton(
+                text = stringResource(id = R.string.button_next),
+                enabled = (originTextState.value.isNotEmpty() &&
+                        destinationTextState.value.isNotEmpty() &&
+                        departureTimeState.value.isNotEmpty() &&
+                        returnTimeState.value.isNotEmpty() &&
+                        departureDateState.selectedDateMillis != null &&
+                        returnDateState.selectedDateMillis != null),
                 onClick = {
                     onNextClick(
                         originTextState.value,
                         destinationTextState.value,
                         departureTimeState.value,
                         returnTimeState.value,
+                        departureSeatState.value,
+                        returnSeatState.value,
                         departureDateState.selectedDateMillis,
                         returnDateState.selectedDateMillis
                     )
-                }) {
-                Text(
-                    text = stringResource(id = R.string.button_next),
-                    style = buttonTextStyle
-                )
-            }
+                }
+            )
         }
     }
 }
@@ -335,7 +290,7 @@ fun DropDownMenu(
             readOnly = true,
             singleLine = false,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+            colors = TextFieldDefaults.colors(unfocusedContainerColor = HintBlack),
             textStyle = textFieldTextStyle
         )
         ExposedDropdownMenu(
@@ -390,7 +345,9 @@ fun DestinationDatePicker(datePickerState: DatePickerState, validator: (Long) ->
                     imageVector = Icons.Default.DateRange,
                     contentDescription = "Select date"
                 )
-            }
+            },
+            colors = TextFieldDefaults.colors(unfocusedContainerColor = HintBlack),
+            textStyle = textFieldTextStyle
         )
 
         Box(modifier = Modifier
@@ -451,7 +408,7 @@ fun validateDestinationText(
             getString(context, R.string.error_same_destination),
             Toast.LENGTH_LONG
         ).show()
-        updatedTextState.value = getString(context, R.string.hint_select_option)
+        updatedTextState.value = ""
     }
 }
 
@@ -497,12 +454,14 @@ fun validateReturnDate(
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
-    FlightDetailsCard(onNextClick = { originText: String,
-                                      destinationText: String,
-                                      departureTime: String,
-                                      returnTime: String,
-                                      departureDate: Long?,
-                                      returnDate: Long?
+    FlightDetailsScreen(onNextClick = { originText: String,
+                                        destinationText: String,
+                                        departureTime: String,
+                                        returnTime: String,
+                                        departureSeat:String,
+                                        _:String,
+                                        departureDate: Long?,
+                                        returnDate: Long?
         ->
 
     })
