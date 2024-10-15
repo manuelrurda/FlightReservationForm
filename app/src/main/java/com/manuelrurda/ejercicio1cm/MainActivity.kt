@@ -34,6 +34,8 @@ class MainActivity : ComponentActivity() {
                                             destinationText: String,
                                             departureTime: String,
                                             returnTime: String,
+                                            departureSeat: String,
+                                            returnSeat: String,
                                             departureDate: Long?,
                                             returnDate: Long?
                                 ->
@@ -43,6 +45,8 @@ class MainActivity : ComponentActivity() {
                                         destinationText,
                                         departureTime,
                                         returnTime,
+                                        departureSeat,
+                                        returnSeat,
                                         departureDate,
                                         returnDate
                                     )
@@ -57,6 +61,8 @@ class MainActivity : ComponentActivity() {
                             destinationText = args.destinationText,
                             departureTime = args.departureTime,
                             returnTime = args.returnTime,
+                            departureSeat = args.departureSeat,
+                            returnSeat = args.returnSeat,
                             departureDate = args.departureDate,
                             returnDate = args.returnDate
                         )
@@ -76,6 +82,8 @@ data class PassengerDetails(
     val destinationText: String,
     val departureTime: String,
     val returnTime: String,
+    val departureSeat: String,
+    val returnSeat: String,
     val departureDate: Long?,
     val returnDate: Long?
 )

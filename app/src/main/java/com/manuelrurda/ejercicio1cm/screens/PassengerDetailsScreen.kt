@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -26,9 +28,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.manuelrurda.ejercicio1cm.Model.FlightDetailsData
 import com.manuelrurda.ejercicio1cm.R
 import com.manuelrurda.ejercicio1cm.components.Background
 import com.manuelrurda.ejercicio1cm.components.TextButton
@@ -42,7 +44,14 @@ import com.manuelrurda.ejercicio1cm.ui.theme.titleTextStyle
 
 @Composable
 fun PassengerDetailsScreen(
-    flightDetailsData: FlightDetailsData
+    originText: String,
+    destinationText: String,
+    departureTime: String,
+    returnTime: String,
+    departureSeat: String,
+    returnSeat: String,
+    departureDate: Long?,
+    returnDate: Long?
 ) {
     val nameTextState = rememberSaveable { mutableStateOf("") }
     val lastNameTextState = rememberSaveable { mutableStateOf("") }
@@ -56,7 +65,14 @@ fun PassengerDetailsScreen(
         ) {
             Column(modifier = Modifier.padding(all = 5.dp)) {
                 FlightDetailsHeader(
-                    flightDetailsData
+                    originText,
+                    destinationText,
+                    departureTime,
+                    returnTime,
+                    departureSeat,
+                    returnSeat,
+                    departureDate,
+                    returnDate
                 )
                 Spacer(
                     modifier = Modifier
@@ -78,7 +94,14 @@ fun PassengerDetailsScreen(
 
 @Composable
 fun FlightDetailsHeader(
-    flightDetailsData: FlightDetailsData
+    originText: String,
+    destinationText: String,
+    departureTime: String,
+    returnTime: String,
+    departureSeat: String,
+    returnSeat: String,
+    departureDate: Long?,
+    returnDate: Long?
 ) {
     Column(
         modifier = Modifier
@@ -94,12 +117,19 @@ fun FlightDetailsHeader(
         ) {
             Column {
                 Text(text = stringResource(id = R.string.label_origin), style = lightGrayTextStyle)
-                Text(text = flightDetailsData.originText, style = labelTextStyle)
+                Text(text = originText, style = labelTextStyle)
                 Text(
-                    text = "${convertMillisToDate(flightDetailsData.departureDate)} | ${flightDetailsData.departureTime}",
+                    text = "${convertMillisToDate(departureDate)} | $departureTime",
                     style = regularTextStyle
                 )
-                Text(text = flightDetailsData.departureSeat, style = regularTextStyle)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(id = R.drawable.icon_plane_seat),
+                        contentDescription = "", modifier = Modifier.size(13.dp)
+                    )
+                    Spacer(modifier = Modifier.width(3.dp))
+                    Text(text = departureSeat, style = regularTextStyle)
+                }
             }
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.icon_two_arrows),
@@ -107,12 +137,19 @@ fun FlightDetailsHeader(
             )
             Column {
                 Text(text = stringResource(id = R.string.label_return), style = lightGrayTextStyle)
-                Text(text = flightDetailsData.destinationText, style = labelTextStyle)
+                Text(text = destinationText, style = labelTextStyle)
                 Text(
-                    text = "${convertMillisToDate(flightDetailsData.returnDate)} | ${flightDetailsData.returnTime}",
+                    text = "${convertMillisToDate(returnDate)} | $returnTime",
                     style = regularTextStyle
                 )
-                Text(text = flightDetailsData.returnSeat, style = regularTextStyle)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(id = R.drawable.icon_plane_seat),
+                        contentDescription = "", modifier = Modifier.size(13.dp)
+                    )
+                    Spacer(modifier = Modifier.width(3.dp))
+                    Text(text = returnSeat, style = regularTextStyle)
+                }
             }
         }
     }
@@ -147,13 +184,19 @@ fun PassengerDetailsForm(
             labelText = stringResource(id = R.string.label_email),
             stateHolder = emailTextState,
             placeholder = stringResource(id = R.string.hint_example_email),
-            validator = { email:String -> validateEmail(email) }
+            validator = { email: String -> validateEmail(email) },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Email
+            )
         )
         Spacer(modifier = Modifier.height(15.dp))
         LabeledTextField(
             labelText = stringResource(id = R.string.label_frequent_flyer),
             stateHolder = frequentFlyerTextState,
-            placeholder = stringResource(id = R.string.hint_frq_flyer)
+            placeholder = stringResource(id = R.string.hint_frq_flyer),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.NumberPassword
+            )
         )
         Spacer(modifier = Modifier.height(15.dp))
         Box(
@@ -179,7 +222,8 @@ fun LabeledTextField(
     labelText: String,
     placeholder: String,
     stateHolder: MutableState<String>,
-    validator: ((String) -> Boolean)? = null
+    validator: ((String) -> Boolean)? = null,
+    keyboardOptions: KeyboardOptions? = null
 ) {
     Text(text = labelText, style = labelTextStyle)
     Spacer(modifier = Modifier.height(5.dp))
@@ -189,10 +233,14 @@ fun LabeledTextField(
         ),
         modifier = Modifier.fillMaxWidth(),
         value = stateHolder.value,
-        onValueChange = {},
+        onValueChange = {
+            stateHolder.value = it
+        },
+        singleLine = true,
         textStyle = textFieldTextStyle,
         placeholder = { Text(text = placeholder, style = textFieldTextStyle) },
-        isError = (validator != null && validator(stateHolder.value))
+        isError = (validator != null && validator(stateHolder.value)),
+        keyboardOptions = keyboardOptions ?: KeyboardOptions.Default
     )
 }
 
@@ -200,15 +248,13 @@ fun LabeledTextField(
 @Composable
 fun Test() {
     PassengerDetailsScreen(
-        FlightDetailsData(
-            originText = "Cancun",
-            destinationText = "Los Cabos",
-            departureTime = "10:00",
-            returnTime = "18:00",
-            departureSeat = "A2",
-            returnSeat = "E6",
-            departureDate = 1728685008853,
-            returnDate = 1728695008853
-        )
+        originText = "Cancun",
+        destinationText = "Los Cabos",
+        departureTime = "10:00",
+        returnTime = "18:00",
+        departureSeat = "A2",
+        returnSeat = "E6",
+        departureDate = 1728685008853,
+        returnDate = 1728695008853
     )
 }

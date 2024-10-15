@@ -48,7 +48,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,6 +55,7 @@ import androidx.compose.ui.window.Popup
 import androidx.core.content.ContextCompat.getString
 import com.manuelrurda.ejercicio1cm.R
 import com.manuelrurda.ejercicio1cm.convertMillisToDate
+import com.manuelrurda.ejercicio1cm.generateRandomSeat
 import com.manuelrurda.ejercicio1cm.ui.theme.PoppinsFontFamily
 import com.manuelrurda.ejercicio1cm.ui.theme.RichBlack
 import com.manuelrurda.ejercicio1cm.ui.theme.Saffrom
@@ -63,10 +63,7 @@ import com.manuelrurda.ejercicio1cm.ui.theme.buttonTextStyle
 import com.manuelrurda.ejercicio1cm.ui.theme.labelTextStyle
 import com.manuelrurda.ejercicio1cm.ui.theme.logoTextStyle
 import com.manuelrurda.ejercicio1cm.ui.theme.textFieldTextStyle
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
-import java.util.Locale
 
 @Composable
 fun FlightDetailsScreen(
@@ -75,6 +72,8 @@ fun FlightDetailsScreen(
         destinationText: String,
         departureTime: String,
         returnTime: String,
+        departureSeat: String,
+        returnSeat: String,
         departureDate: Long?,
         returnDate: Long?
     ) -> Unit
@@ -117,14 +116,7 @@ fun FlightDetailsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FlightDetailsCard(
-    onNextClick: (
-        originText: String,
-        destinationText: String,
-        departureTime: String,
-        returnTime: String,
-        departureDate: Long?,
-        returnDate: Long?
-    ) -> Unit
+    onNextClick: (originText: String, destinationText: String, departureTime: String, returnTime: String, departureSeat: String, returnSeat: String, departureDate: Long?, returnDate: Long?) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -282,12 +274,12 @@ fun FlightDetailsCard(
             Button(
                 colors = ButtonDefaults.buttonColors(containerColor = RichBlack),
                 enabled = (
-                            originTextState.value.isNotEmpty() &&
-                            destinationTextState.value.isNotEmpty() &&
-                            departureTimeState.value.isNotEmpty() &&
-                            returnTimeState.value.isNotEmpty() &&
-                            departureDateState.selectedDateMillis != null &&
-                            returnDateState.selectedDateMillis != null
+                        originTextState.value.isNotEmpty() &&
+                                destinationTextState.value.isNotEmpty() &&
+                                departureTimeState.value.isNotEmpty() &&
+                                returnTimeState.value.isNotEmpty() &&
+                                departureDateState.selectedDateMillis != null &&
+                                returnDateState.selectedDateMillis != null
                         ),
                 onClick = {
                     onNextClick(
@@ -295,6 +287,8 @@ fun FlightDetailsCard(
                         destinationTextState.value,
                         departureTimeState.value,
                         returnTimeState.value,
+                        generateRandomSeat(),
+                        generateRandomSeat(),
                         departureDateState.selectedDateMillis,
                         returnDateState.selectedDateMillis
                     )
@@ -501,6 +495,8 @@ private fun Preview() {
                                       destinationText: String,
                                       departureTime: String,
                                       returnTime: String,
+                                      _: String,
+                                      _: String,
                                       departureDate: Long?,
                                       returnDate: Long?
         ->
