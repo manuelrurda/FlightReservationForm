@@ -15,19 +15,25 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,6 +42,7 @@ import com.manuelrurda.ejercicio1cm.components.Background
 import com.manuelrurda.ejercicio1cm.components.TextButton
 import com.manuelrurda.ejercicio1cm.convertMillisToDate
 import com.manuelrurda.ejercicio1cm.ui.theme.HintBlack
+import com.manuelrurda.ejercicio1cm.ui.theme.RichBlack
 import com.manuelrurda.ejercicio1cm.ui.theme.labelTextStyle
 import com.manuelrurda.ejercicio1cm.ui.theme.lightGrayTextStyle
 import com.manuelrurda.ejercicio1cm.ui.theme.regularTextStyle
@@ -184,7 +191,7 @@ fun PassengerDetailsForm(
             labelText = stringResource(id = R.string.label_email),
             stateHolder = emailTextState,
             placeholder = stringResource(id = R.string.hint_example_email),
-            validator = { email: String -> validateEmail(email) },
+            isValid = { email: String -> isValidEmail(email) },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Email
             )
@@ -195,8 +202,10 @@ fun PassengerDetailsForm(
             stateHolder = frequentFlyerTextState,
             placeholder = stringResource(id = R.string.hint_frq_flyer),
             keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.NumberPassword
-            )
+                keyboardType = KeyboardType.NumberPassword,
+            ),
+            isValid = {freqFlyerNum: String -> isValidFreqFlyer(freqFlyerNum) },
+            maxLength = 8
         )
         Spacer(modifier = Modifier.height(15.dp))
         Box(
@@ -205,43 +214,60 @@ fun PassengerDetailsForm(
         ) {
             TextButton(
                 text = stringResource(id = R.string.button_next),
-                enabled = true
-            ) {
-
-            }
+                enabled = nameTextState.value.isNotEmpty() &&
+                        lastNameTextState.value.isNotEmpty() &&
+                        isValidEmail(emailTextState.value) &&
+                        isValidFreqFlyer(frequentFlyerTextState.value),
+                onClick = {}
+            )
         }
     }
 }
 
-fun validateEmail(email: String): Boolean {
-    return email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
-}
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LabeledTextField(
     labelText: String,
     placeholder: String,
     stateHolder: MutableState<String>,
-    validator: ((String) -> Boolean)? = null,
-    keyboardOptions: KeyboardOptions? = null
+    isValid: ((String) -> Boolean)? = null,
+    keyboardOptions: KeyboardOptions? = null,
+    maxLength: Int? = null
 ) {
+    var isError by remember { mutableStateOf(false) };
+
     Text(text = labelText, style = labelTextStyle)
     Spacer(modifier = Modifier.height(5.dp))
-    TextField(
-        colors = TextFieldDefaults.colors(
-            unfocusedContainerColor = HintBlack
+    OutlinedTextField(
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            containerColor = HintBlack,
+            focusedBorderColor = if (isError) Color.Red else RichBlack
         ),
         modifier = Modifier.fillMaxWidth(),
         value = stateHolder.value,
-        onValueChange = {
-            stateHolder.value = it
+        onValueChange = { text: String ->
+            stateHolder.value = if (maxLength == null || text.length <= maxLength) text
+            else stateHolder.value
+            if (isValid != null) {
+                isError = !isValid(text)
+            }
         },
         singleLine = true,
         textStyle = textFieldTextStyle,
         placeholder = { Text(text = placeholder, style = textFieldTextStyle) },
-        isError = (validator != null && validator(stateHolder.value)),
-        keyboardOptions = keyboardOptions ?: KeyboardOptions.Default
+        isError = isError,
+        keyboardOptions = keyboardOptions ?: KeyboardOptions.Default.copy(
+            imeAction = ImeAction.Next
+        ),
     )
+}
+
+fun isValidEmail(email: String): Boolean {
+    return email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+}
+
+fun isValidFreqFlyer(freqFlyerNum: String): Boolean {
+    return freqFlyerNum.isEmpty() || freqFlyerNum.length == 8
 }
 
 @Preview(showBackground = true)
