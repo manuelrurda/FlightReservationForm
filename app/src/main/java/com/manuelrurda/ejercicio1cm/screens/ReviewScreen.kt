@@ -38,7 +38,8 @@ fun ReviewScreen(
     name: String,
     lastName: String,
     email: String,
-    freqFlyerNum: String
+    freqFlyerNum: String,
+    onNextClick: () -> Unit
 ) {
     Background {
         ElevatedCard(
@@ -98,7 +99,10 @@ fun ReviewScreen(
                 ) {
                     TextButton(text = stringResource(id = R.string.button_reserve),
                         enabled = true,
-                        onClick = {})
+                        onClick = {
+                            onNextClick()
+                        }
+                    )
                 }
             }
         }
@@ -120,6 +124,9 @@ fun Preview3() {
         name = "Manuel",
         lastName = "Rodriguez",
         email = "manuelrurda@gmail.com",
-        freqFlyerNum = "12345678"
+        freqFlyerNum = "12345678",
+        onNextClick = {
+
+        }
     )
 }

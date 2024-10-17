@@ -4,7 +4,10 @@
     <string name="text_na" translatable="false">N/A</string>
     <string name="text_round_trip">Round Trip</string>
     <string name="text_total">Total</string>
+    <string name="text_confirmation_message">Your flight is booked. Please check your email to
+        review your itinerary and complete online check-in.</string>
 
+    <string name="title_reservation_confirmed">Reservation Confirmed</string>
     <string name="title_flight_details">Flight Details</string>
     <string name="title_passenger_details">Passenger Details</string>
     <string name="title_fare_summary">Fare Summary</string>
@@ -31,6 +34,7 @@
     <string name="button_next">Next</string>
     <string name="button_select">Select</string>
     <string name="button_reserve">Reserve</string>
+    <string name="button_continue">Continue</string>
 
     <!--Destinations-->
     <string name="menu_item_cancun" translatable="false">Cancun</string>

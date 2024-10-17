@@ -24,4 +24,7 @@
     <string name="button_reserve">Reservar</string>
     <string name="menu_item_mxcity">Ciudad de México</string>
     <string name="error_same_destination">El destino y el origen no pueden ser el mismo lugar.</string>
+    <string name="text_confirmation_message">Su vuelo está reservado. Por favor revise su correo electrónico para revise su itinerario y complete el check-in en línea.</string>
+    <string name="title_reservation_confirmed">Reservación Confirmada</string>
+    <string name="button_continue">Continuar</string>
 </resources>

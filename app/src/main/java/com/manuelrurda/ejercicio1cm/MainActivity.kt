@@ -4,13 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Text
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.manuelrurda.ejercicio1cm.screens.ConfirmationScreen
 import com.manuelrurda.ejercicio1cm.screens.FlightDetailsScreen
 import com.manuelrurda.ejercicio1cm.screens.PassengerDetailsScreen
 import com.manuelrurda.ejercicio1cm.screens.ReviewScreen
@@ -114,13 +113,18 @@ class MainActivity : ComponentActivity() {
                             name = args.name,
                             lastName = args.lastName,
                             email = args.email,
-                            freqFlyerNum = args.freqFlyerNum
+                            freqFlyerNum = args.freqFlyerNum,
+                            onNextClick = {
+                                navController.navigate(Confirmation)
+                            }
                         )
                     }
-                    composable<Test> {
-                        Column {
-                            Text(text = "hi")
-                        }
+                    composable<Confirmation> {
+                        ConfirmationScreen(
+                            onNextClick = {
+                                navController.navigate(FlightDetails)
+                            }
+                        )
                     }
                 }
             }
@@ -132,7 +136,7 @@ class MainActivity : ComponentActivity() {
 object FlightDetails
 
 @Serializable
-object Test
+object Confirmation
 
 @Serializable
 data class PassengerDetails(
