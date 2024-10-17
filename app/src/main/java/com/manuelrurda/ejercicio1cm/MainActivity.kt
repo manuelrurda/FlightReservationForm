@@ -19,7 +19,7 @@ import kotlinx.serialization.Serializable
 
 class MainActivity : ComponentActivity() {
 
-    lateinit var navController: NavHostController
+    private lateinit var navController: NavHostController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
                                             name: String,
                                             lastName: String,
                                             email: String,
-                                            freqFlyerNum: String? ->
+                                            freqFlyerNum: String ->
 
                                 navController.navigate(
                                     Review(
@@ -159,5 +159,5 @@ data class Review(
     val name: String,
     val lastName: String,
     val email: String,
-    val freqFlyerNum: String?
+    val freqFlyerNum: String
 )

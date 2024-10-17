@@ -35,7 +35,7 @@ val logoTextStyle = TextStyle(
 
 val lightGrayTextStyle = TextStyle(
     fontFamily = PoppinsFontFamily,
-    fontWeight = FontWeight.Normal, color = lightGray,
+    fontWeight = FontWeight.Normal, color = LightGray,
     fontSize = 12.sp
 )
 

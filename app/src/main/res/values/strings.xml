@@ -1,8 +1,13 @@
 <resources>
     <string name="app_name">Ejercicio1CM</string>
 
+    <string name="text_na">N/A</string>
+    <string name="text_round_trip">Round Trip</string>
+    <string name="text_total">Total</string>
+
     <string name="title_flight_details">Flight Details</string>
     <string name="title_passenger_details">Passenger Details</string>
+    <string name="title_fare_summary">Fare Summary</string>
 
     <string name="label_origin">Origin</string>
     <string name="label_return">Return</string>
@@ -25,6 +30,7 @@
 
     <string name="button_next">Next</string>
     <string name="button_select">Select</string>
+    <string name="button_reserve">Reserve</string>
 
     <!--Destinations-->
     <string name="menu_item_cancun">Cancun</string>

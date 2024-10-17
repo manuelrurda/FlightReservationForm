@@ -50,7 +50,7 @@ fun PassengerDetailsScreen(
     returnSeat: String,
     departureDate: Long?,
     returnDate: Long?,
-    onNextClick: (String, String, String, String, String, String, Long?, Long?, String, String, String, String?) -> Unit
+    onNextClick: (String, String, String, String, String, String, Long?, Long?, String, String, String, String) -> Unit
 ) {
     val nameTextState = rememberSaveable { mutableStateOf("") }
     val lastNameTextState = rememberSaveable { mutableStateOf("") }
@@ -105,7 +105,7 @@ fun PassengerDetailsForm(
     lastNameTextState: MutableState<String>,
     emailTextState: MutableState<String>,
     frequentFlyerTextState: MutableState<String>,
-    onNextClick: (String, String, String, String, String, String, Long?, Long?, String, String, String, String?) -> Unit,
+    onNextClick: (String, String, String, String, String, String, Long?, Long?, String, String, String, String) -> Unit,
     originText: String,
     destinationText: String,
     departureTime: String,
@@ -195,7 +195,7 @@ fun LabeledTextField(
     keyboardOptions: KeyboardOptions? = null,
     maxLength: Int? = null
 ) {
-    var isError by remember { mutableStateOf(false) };
+    var isError by remember { mutableStateOf(false) }
 
     Text(text = labelText, style = labelTextStyle)
     Spacer(modifier = Modifier.height(5.dp))
