@@ -24,7 +24,7 @@ fun PassengerDetailsComponent(
     name: String,
     lastName: String,
     email: String,
-    freqFlyerNum: String?
+    freqFlyerNum: String
 ) {
     Column(
         modifier = Modifier
@@ -66,7 +66,7 @@ fun PassengerDetailsComponent(
             style = lightGrayTextStyle
         )
         Text(
-            text = freqFlyerNum ?: stringResource(id = R.string.text_na),
+            text = freqFlyerNum.ifEmpty { stringResource(id = R.string.text_na) },
             style = regularTextStyle
         )
     }
