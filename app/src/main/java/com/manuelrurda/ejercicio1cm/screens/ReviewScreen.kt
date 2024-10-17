@@ -114,7 +114,7 @@ fun ReviewScreen(
 
 @Preview
 @Composable
-fun prev() {
+fun Preview3() {
     ReviewScreen(
         originText = "Los Cabos",
         destinationText = "Monterrey",

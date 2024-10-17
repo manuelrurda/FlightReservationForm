@@ -233,7 +233,7 @@ fun isValidFreqFlyer(freqFlyerNum: String): Boolean {
 
 @Preview(showBackground = true)
 @Composable
-fun Test() {
+fun Preview2() {
     PassengerDetailsScreen(
         originText = "Cancun",
         destinationText = "Los Cabos",

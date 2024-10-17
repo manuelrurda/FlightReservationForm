@@ -492,7 +492,7 @@ fun validateReturnDate(
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
-    FlightDetailsCard(onNextClick = { _: String,
+    FlightDetailsScreen(onNextClick = { _: String,
                                       _: String,
                                       _: String,
                                       _: String,
@@ -501,6 +501,5 @@ private fun Preview() {
                                       _: Long?,
                                       _: Long?
         ->
-
     })
 }
