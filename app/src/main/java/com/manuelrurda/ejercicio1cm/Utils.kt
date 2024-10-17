@@ -4,7 +4,6 @@ import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.math.cos
 
 fun convertMillisToDate(millis: Long?): String {
     val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())

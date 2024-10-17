@@ -11,10 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -185,7 +184,6 @@ fun PassengerDetailsForm(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LabeledTextField(
     labelText: String,
@@ -200,9 +198,11 @@ fun LabeledTextField(
     Text(text = labelText, style = labelTextStyle)
     Spacer(modifier = Modifier.height(5.dp))
     OutlinedTextField(
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            containerColor = HintBlack,
-            focusedBorderColor = if (isError) Color.Red else RichBlack
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = HintBlack,
+            unfocusedContainerColor = HintBlack,
+            disabledContainerColor = HintBlack,
+            focusedBorderColor = if (isError) Color.Red else RichBlack,
         ),
         modifier = Modifier.fillMaxWidth(),
         value = stateHolder.value,
