@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Text
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -11,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.manuelrurda.ejercicio1cm.screens.FlightDetailsScreen
 import com.manuelrurda.ejercicio1cm.screens.PassengerDetailsScreen
+import com.manuelrurda.ejercicio1cm.screens.ReviewScreen
 import com.manuelrurda.ejercicio1cm.ui.theme.Ejercicio1CMTheme
 import kotlinx.serialization.Serializable
 
@@ -64,8 +67,60 @@ class MainActivity : ComponentActivity() {
                             departureSeat = args.departureSeat,
                             returnSeat = args.returnSeat,
                             departureDate = args.departureDate,
-                            returnDate = args.returnDate
+                            returnDate = args.returnDate,
+                            onNextClick = { originText: String,
+                                            destinationText: String,
+                                            departureTime: String,
+                                            returnTime: String,
+                                            departureSeat: String,
+                                            returnSeat: String,
+                                            departureDate: Long?,
+                                            returnDate: Long?,
+                                            name: String,
+                                            lastName: String,
+                                            email: String,
+                                            freqFlyerNum: String? ->
+
+                                navController.navigate(
+                                    Review(
+                                        originText,
+                                        destinationText,
+                                        departureTime,
+                                        returnTime,
+                                        departureSeat,
+                                        returnSeat,
+                                        departureDate,
+                                        returnDate,
+                                        name,
+                                        lastName,
+                                        email,
+                                        freqFlyerNum
+                                    )
+                                )
+                            }
                         )
+                    }
+                    composable<Review> {
+                        val args = it.toRoute<Review>()
+                        ReviewScreen(
+                            originText = args.originText,
+                            destinationText = args.destinationText,
+                            departureTime = args.departureTime,
+                            returnTime = args.returnTime,
+                            departureSeat = args.departureSeat,
+                            returnSeat = args.returnSeat,
+                            departureDate = args.departureDate,
+                            returnDate = args.returnDate,
+                            name = args.name,
+                            lastName = args.lastName,
+                            email = args.email,
+                            freqFlyerNum = args.freqFlyerNum
+                        )
+                    }
+                    composable<Test> {
+                        Column {
+                            Text(text = "hi")
+                        }
                     }
                 }
             }
@@ -77,6 +132,9 @@ class MainActivity : ComponentActivity() {
 object FlightDetails
 
 @Serializable
+object Test
+
+@Serializable
 data class PassengerDetails(
     val originText: String,
     val destinationText: String,
@@ -86,4 +144,20 @@ data class PassengerDetails(
     val returnSeat: String,
     val departureDate: Long?,
     val returnDate: Long?
+)
+
+@Serializable
+data class Review(
+    val originText: String,
+    val destinationText: String,
+    val departureTime: String,
+    val returnTime: String,
+    val departureSeat: String,
+    val returnSeat: String,
+    val departureDate: Long?,
+    val returnDate: Long?,
+    val name: String,
+    val lastName: String,
+    val email: String,
+    val freqFlyerNum: String?
 )
