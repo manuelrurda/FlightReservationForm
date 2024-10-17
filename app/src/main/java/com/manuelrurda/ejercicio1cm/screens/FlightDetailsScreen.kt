@@ -120,7 +120,7 @@ fun FlightDetailsCard(
 ) {
 
     val context = LocalContext.current
-    val selectHint = stringResource(id = R.string.hint_select_option)
+
     val destinations = listOf(
         stringResource(id = R.string.menu_item_gdl),
         stringResource(id = R.string.menu_item_mty),
@@ -378,6 +378,7 @@ fun DestinationDatePicker(datePickerState: DatePickerState, validator: (Long) ->
                     style = textFieldTextStyle
                 )
             },
+            textStyle = textFieldTextStyle,
             readOnly = true,
             trailingIcon = {
                 Icon(
@@ -445,7 +446,7 @@ fun validateDestinationText(
             getString(context, R.string.error_same_destination),
             Toast.LENGTH_LONG
         ).show()
-        updatedTextState.value = getString(context, R.string.hint_select_option)
+        updatedTextState.value = ""
     }
 }
 
@@ -491,18 +492,15 @@ fun validateReturnDate(
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
-    FlightDetailsCard(onNextClick = { originText: String,
-                                      destinationText: String,
-                                      departureTime: String,
-                                      returnTime: String,
+    FlightDetailsCard(onNextClick = { _: String,
                                       _: String,
                                       _: String,
-                                      departureDate: Long?,
-                                      returnDate: Long?
+                                      _: String,
+                                      _: String,
+                                      _: String,
+                                      _: Long?,
+                                      _: Long?
         ->
 
     })
-//    val departureDateState = rememberDatePickerState()
-//    DestinationDatePicker(departureDateState)
-//    DestinationsDropDown(destinations = destinations)
 }
