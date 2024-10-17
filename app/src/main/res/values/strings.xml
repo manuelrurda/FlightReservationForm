@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Ejercicio1CM</string>
 
-    <string name="text_na">N/A</string>
+    <string name="text_na" translatable="false">N/A</string>
     <string name="text_round_trip">Round Trip</string>
     <string name="text_total">Total</string>
 
@@ -22,29 +22,29 @@
     <string name="label_frequent_flyer">Frequent Flyer Number</string>
 
     <string name="hint_select_option">Select</string>
-    <string name="hint_select_date">MM/dd/yyyy</string>
-    <string name="hint_john">John</string>
-    <string name="hint_doe">Doe</string>
+    <string name="hint_select_date" translatable="false">MM/dd/yyyy</string>
+    <string name="hint_john" translatable="false">John</string>
+    <string name="hint_doe" translatable="false">Doe</string>
     <string name="hint_example_email">example@email.com</string>
-    <string name="hint_frq_flyer">01XXXXXX</string>
+    <string name="hint_frq_flyer" translatable="false">01XXXXXX</string>
 
     <string name="button_next">Next</string>
     <string name="button_select">Select</string>
     <string name="button_reserve">Reserve</string>
 
     <!--Destinations-->
-    <string name="menu_item_cancun">Cancun</string>
+    <string name="menu_item_cancun" translatable="false">Cancun</string>
     <string name="menu_item_mxcity">Mexico City</string>
-    <string name="menu_item_gdl">Guadalajara</string>
-    <string name="menu_item_mty">Monterrey</string>
-    <string name="menu_item_cabos">Los Cabos</string>
-    <string name="menu_item_tij">Tijuana</string>
+    <string name="menu_item_gdl" translatable="false">Guadalajara</string>
+    <string name="menu_item_mty" translatable="false">Monterrey</string>
+    <string name="menu_item_cabos" translatable="false">Los Cabos</string>
+    <string name="menu_item_tij" translatable="false">Tijuana</string>
 
     <!--Flight Times-->
-    <string name="menu_item_700">7:00</string>
-    <string name="menu_item_1000">10:00</string>
-    <string name="menu_item_1400">14:00</string>
-    <string name="menu_item_1800">18:00</string>
+    <string name="menu_item_700" translatable="false">7:00</string>
+    <string name="menu_item_1000" translatable="false">10:00</string>
+    <string name="menu_item_1400" translatable="false">14:00</string>
+    <string name="menu_item_1800" translatable="false">18:00</string>
 
     <string name="error_same_destination">Destination and origin cannot be the same location.</string>
 </resources>

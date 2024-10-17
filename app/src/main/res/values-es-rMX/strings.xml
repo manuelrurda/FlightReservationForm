@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ejercicio1CM</string>
+    <string name="text_round_trip">Viaje Redondo</string>
+    <string name="text_total">Total</string>
+    <string name="title_flight_details">Detalles de Vuelo</string>
+    <string name="title_passenger_details">Detalles de Pasajero</string>
+    <string name="title_fare_summary">Resumen de Tarifa</string>
+    <string name="label_origin">Origen</string>
+    <string name="label_return">Regreso</string>
+    <string name="label_destination">Destino</string>
+    <string name="label_departure_date">Fecha de Salida</string>
+    <string name="label_return_date">Fecha de Regreso</string>
+    <string name="label_departure_time">Hora de Salida</string>
+    <string name="label_return_time">Hora de Regreso</string>
+    <string name="label_name">Nombre</string>
+    <string name="label_last_name">Apellido(s)</string>
+    <string name="label_email">Correo Electrónico</string>
+    <string name="label_frequent_flyer">Número de Viajero Frecuente</string>
+    <string name="hint_select_option">Seleccionar</string>
+    <string name="hint_example_email">ejemplo@email.com</string>
+    <string name="button_next">Siguiente</string>
+    <string name="button_select">Seleccionar</string>
+    <string name="button_reserve">Reservar</string>
+    <string name="menu_item_mxcity">Ciudad de México</string>
+    <string name="error_same_destination">El destino y el origen no pueden ser el mismo lugar.</string>
+</resources>
