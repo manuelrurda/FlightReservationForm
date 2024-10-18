@@ -62,6 +62,8 @@ fun FlightDetailsComponent(
                     )
                     Spacer(modifier = Modifier.width(3.dp))
                     Text(text = departureSeat, style = regularTextStyle)
+                    Spacer(modifier = Modifier.width(3.dp))
+                    SeatsInfoButton()
                 }
             }
             Icon(
@@ -82,6 +84,8 @@ fun FlightDetailsComponent(
                     )
                     Spacer(modifier = Modifier.width(3.dp))
                     Text(text = returnSeat, style = regularTextStyle)
+                    Spacer(modifier = Modifier.width(3.dp))
+                    SeatsInfoButton()
                 }
             }
         }
