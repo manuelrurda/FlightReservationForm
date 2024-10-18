@@ -150,7 +150,7 @@ fun PassengerDetailsForm(
                 keyboardType = KeyboardType.NumberPassword,
             ),
             isValid = { freqFlyerNum: String -> isValidFreqFlyer(freqFlyerNum) },
-            maxLength = 8
+            maxLength = 8,
         )
         Spacer(modifier = Modifier.height(15.dp))
         Box(
@@ -228,7 +228,9 @@ fun isValidEmail(email: String): Boolean {
 }
 
 fun isValidFreqFlyer(freqFlyerNum: String): Boolean {
-    return freqFlyerNum.isEmpty() || freqFlyerNum.length == 8
+
+    return freqFlyerNum.isEmpty() || (freqFlyerNum.length == 8
+            && freqFlyerNum.all { c -> c.isDigit()})
 }
 
 @Preview(showBackground = true)
